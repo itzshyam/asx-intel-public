@@ -1,0 +1,22 @@
+[server]
+port = 8000
+address = "0.0.0.0"
+headless = true
+
+[browser]
+gatherUsageStats = false
+```
+
+Azure only exposes port 8000 by default so this is critical.
+
+**2 — Update `.gitignore`**
+
+Make sure `.streamlit/secrets.toml` is in `.gitignore` — that's where Azure environment variables go and it should never be committed:
+```
+.env
+venv/
+__pycache__/
+*.pyc
+prompts/analysis.py
+prompts/anomaly.py
+.streamlit/secrets.toml
