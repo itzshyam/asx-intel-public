@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works — ASX Intel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        /* ── How It Works specific styles ── */
+        .hiw-hero {
+            padding: 48px 0 40px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 48px;
+        }
+        .hiw-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--ink-muted);
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        .hiw-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--ink);
+            margin-bottom: 16px;
+            line-height: 1.15;
+        }
+        .hiw-lead {
+            font-size: 1.0rem;
+            font-weight: 300;
+            line-height: 1.75;
+            color: var(--ink-muted);
+            max-width: 580px;
+        }
+
+        /* ── Section titles ── */
+        .hiw-section {
+            margin-bottom: 56px;
+        }
+        .hiw-section-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 28px;
+        }
+        .hiw-section-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: var(--ink);
+            margin-bottom: 12px;
+        }
+        .hiw-section-body {
+            font-size: 0.9rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: var(--ink-muted);
+            max-width: 640px;
+            margin-bottom: 28px;
+        }
+
+        /* ── Pipeline diagram container ── */
+        .diagram-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 32px 24px;
+            margin-bottom: 16px;
+        }
+
+        /* ── Agent cards ── */
+        .agent-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .agent-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+        }
+        .agent-card-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .agent-card-tag.tag-purple { color: #534AB7; }
+        .agent-card-tag.tag-coral  { color: #993C1D; }
+        .agent-card-name {
+            font-family: var(--font-display);
+            font-size: 1.0rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+        .agent-card-body {
+            font-size: 0.84rem;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--ink-muted);
+        }
+        .agent-card-meta {
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 0.76rem;
+            color: var(--ink-faint);
+            font-family: var(--font-mono);
+        }
+
+        /* ── Tech stack table ── */
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .stack-table th {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .stack-table td {
+            font-size: 0.85rem;
+            padding: 14px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.6;
+        }
+        .stack-table tr:last-child td { border-bottom: none; }
+        .stack-table td:first-child {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--ink);
+            white-space: nowrap;
+            width: 160px;
+        }
+        .stack-table td:nth-child(2) {
+            color: var(--ink-muted);
+            font-weight: 300;
+        }
+
+        /* ── Limitations list ── */
+        .limit-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+        .limit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            font-size: 0.86rem;
+            line-height: 1.6;
+            color: var(--ink-muted);
+        }
+        .limit-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--ink-faint);
+            flex-shrink: 0;
+            margin-top: 6px;
+        }
+
+        /* ── Next up list ── */
+        .next-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .next-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--ink);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+        }
+        .next-card-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 6px;
+        }
+        .next-card-title {
+            font-family: var(--font-display);
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+        .next-card-body {
+            font-size: 0.8rem;
+            font-weight: 300;
+            color: var(--ink-muted);
+            line-height: 1.6;
+        }
+
+        /* ── CTA ── */
+        .hiw-cta {
+            background: var(--ink);
+            color: #fff;
+            border-radius: var(--radius-lg);
+            padding: 32px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+        }
+        .hiw-cta-text {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .hiw-cta-sub {
+            font-size: 0.84rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 4px;
+            font-weight: 300;
+        }
+        .hiw-cta-btn {
+            background: #fff;
+            color: var(--ink);
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 12px 24px;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: opacity 0.15s;
+        }
+        .hiw-cta-btn:hover { opacity: 0.85; }
+
+        /* ── Mobile ── */
+        @media (max-width: 640px) {
+            .agent-grid { grid-template-columns: 1fr; }
+            .next-grid { grid-template-columns: 1fr; }
+            .hiw-cta { flex-direction: column; align-items: flex-start; }
+            .stack-table td:first-child { width: 120px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-shell results-shell">
+
+    <!-- ── Header ── -->
+    <header class="site-header">
+        <a href="/" class="logo">ASX<span>Intel</span></a>
+        <nav style="display:flex; gap:20px; align-items:center;">
+            <a href="/how-it-works" style="font-size:0.84rem; font-weight:500; color:var(--ink); border-bottom: 2px solid var(--ink); padding-bottom:2px;">How it works</a>
+            <a href="/" class="new-search-btn">Try it →</a>
+        </nav>
+    </header>
+
+    <main style="padding: 0 0 48px;">
+
+        <!-- ── Hero ── -->
+        <div class="hiw-hero">
+            <div class="hiw-eyebrow">Architecture · Pipeline · Design decisions</div>
+            <h1 class="hiw-title">How ASX Intel works</h1>
+            <p class="hiw-lead">
+                ASX Intel is a two-agent AI pipeline built by a network engineer
+                to demonstrate practical LLM application development. Every design
+                decision was made deliberately — here's what's running under the hood.
+            </p>
+        </div>
+
+        <!-- ── Section 1: Pipeline ── -->
+        <div class="hiw-section">
+            <div class="hiw-section-label">The pipeline</div>
+            <h2 class="hiw-section-title">Two agents. One verdict.</h2>
+            <p class="hiw-section-body">
+                Most AI tools use a single prompt to do everything. ASX Intel separates
+                analysis from validation — Agent 1 forms a view, Agent 2 stress-tests it
+                with live web search before anything reaches you. The same pattern a
+                senior analyst uses to pressure-test a junior's work before it goes to a client.
+            </p>
+
+            <div class="diagram-wrap">
+                <svg width="100%" viewBox="0 0 680 600">
+                    <defs>
+                        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </marker>
+                    </defs>
+
+                    <!-- Data sources -->
+                    <rect x="40" y="40" width="150" height="56" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+                    <text x="115" y="62" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="13" font-weight="600" fill="#085041">yfinance</text>
+                    <text x="115" y="80" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="11" fill="#0F6E56">Live financials</text>
+
+                    <rect x="215" y="40" width="150" height="56" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+                    <text x="290" y="62" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="13" font-weight="600" fill="#085041">NewsAPI</text>
+                    <text x="290" y="80" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="11" fill="#0F6E56">Recent headlines</text>
+
+                    <rect x="390" y="40" width="150" height="56" rx="8" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+                    <text x="465" y="62" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="13" font-weight="600" fill="#2C2C2A">ASX ticker</text>
+                    <text x="465" y="80" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="11" fill="#5F5E5A">User input</text>
+
+                    <!-- Collector lines -->
+                    <line x1="115" y1="96" x2="115" y2="128" stroke="#888780" stroke-width="0.5" opacity="0.4"/>
+                    <line x1="290" y1="96" x2="290" y2="128" stroke="#888780" stroke-width="0.5" opacity="0.4"/>
+                    <line x1="465" y1="96" x2="465" y2="128" stroke="#888780" stroke-width="0.5" opacity="0.4"/>
+                    <line x1="115" y1="128" x2="465" y2="128" stroke="#888780" stroke-width="0.5" opacity="0.4"/>
+                    <line x1="290" y1="128" x2="290" y2="156" stroke="#888780" stroke-width="0.5" opacity="0.5" marker-end="url(#arrow)"/>
+
+                    <!-- Agent 1 -->
+                    <rect x="80" y="156" width="420" height="72" rx="8" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+                    <text x="290" y="181" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="13" font-weight="600" fill="#26215C">Agent 1 — Financial Analyst</text>
+                    <text x="290" y="202" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="11" fill="#3C3489">Reads data · assigns signals · triages concerns with confidence scoring</text>
+
+                    <!-- Arrow Agent 1 → Agent 2 -->
+                    <line x1="290" y1="228" x2="290" y2="288" stroke="#888780" stroke-width="0.5" opacity="0.5" marker-end="url(#arrow)"/>
+                    <text x="310" y="261" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="11" fill="#888780">Structured concern objects</text>
+
+                    <!-- Gemini -->
+                    <rect x="510" y="288" width="150" height="68" rx="8" fill="#FAEEDA" stroke="#FAC775" stroke-width="0.5"/>
+                    <text x="585" y="314" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="13" font-weight="600" fill="#412402">Gemini</text>
+                    <text x="585" y="332" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="11" fill="#633806">Live web search</text>
+                    <text x="585" y="348" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="11" fill="#633806">Google grounding</text>
+                    <line x1="510" y1="322" x2="500" y2="322" stroke="#888780" stroke-width="0.5" opacity="0.5" marker-end="url(#arrow)"/>
+
+                    <!-- Agent 2 -->
+                    <rect x="80" y="288" width="410" height="72" rx="8" fill="#FAECE7" stroke="#F0997B" stroke-width="0.5"/>
+                    <text x="285" y="313" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="13" font-weight="600" fill="#4A1B0C">Agent 2 — Devil's Advocate</text>
+                    <text x="285" y="334" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="11" fill="#712B13">Stress-tests conclusions · adjusts signals · compliance scan</text>
+
+                    <!-- Arrow Agent 2 → Output -->
+                    <line x1="290" y1="360" x2="290" y2="408" stroke="#888780" stroke-width="0.5" opacity="0.5" marker-end="url(#arrow)"/>
+
+                    <!-- Output -->
+                    <rect x="80" y="408" width="410" height="64" rx="8" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+                    <text x="285" y="432" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="13" font-weight="600" fill="#2C2C2A">Enriched JSON output</text>
+                    <text x="285" y="452" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="11" fill="#5F5E5A">Signals · verdict · investor fit · risks · disclaimer</text>
+
+                    <!-- Arrow Output → FastAPI -->
+                    <line x1="290" y1="472" x2="290" y2="520" stroke="#888780" stroke-width="0.5" opacity="0.5" marker-end="url(#arrow)"/>
+
+                    <!-- FastAPI -->
+                    <rect x="80" y="520" width="410" height="64" rx="8" fill="#E6F1FB" stroke="#85B7EB" stroke-width="0.5"/>
+                    <text x="285" y="544" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="13" font-weight="600" fill="#042C53">FastAPI + Jinja2</text>
+                    <text x="285" y="564" text-anchor="middle" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="11" fill="#0C447C">Renders analysis as HTML · Azure hosted</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- ── Section 2: The two agents ── -->
+        <div class="hiw-section">
+            <div class="hiw-section-label">The agents</div>
+            <h2 class="hiw-section-title">Separation of concerns</h2>
+            <p class="hiw-section-body">
+                Each agent has a single focused role, a defined input contract, and a defined
+                output contract. Neither agent does the other's job.
+            </p>
+
+            <div class="agent-grid">
+                <div class="agent-card">
+                    <div class="agent-card-tag tag-purple">Agent 1</div>
+                    <div class="agent-card-name">Financial Analyst</div>
+                    <div class="agent-card-body">
+                        Receives structured financial data from yfinance and recent headlines
+                        from NewsAPI. Interprets the numbers in plain English, assigns colour-coded
+                        signals per metric, and triages any concerns — flagging confidence level
+                        and what to search for.
+                    </div>
+                    <div class="agent-card-meta">Input: financial data + news · No web access</div>
+                </div>
+                <div class="agent-card">
+                    <div class="agent-card-tag tag-coral">Agent 2</div>
+                    <div class="agent-card-name">Devil's Advocate</div>
+                    <div class="agent-card-body">
+                        Receives Agent 1's full output including flagged concerns. Runs a batched
+                        Gemini web search to verify each concern against real-world context —
+                        ASX announcements, sector news, macro conditions. Adjusts signals where
+                        evidence warrants and runs a compliance check before output is returned.
+                    </div>
+                    <div class="agent-card-meta">Input: Agent 1 JSON + Gemini search findings</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Section 3: Tech stack ── -->
+        <div class="hiw-section">
+            <div class="hiw-section-label">Tech stack</div>
+            <h2 class="hiw-section-title">Tools and why they were chosen</h2>
+
+            <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; margin-bottom: 16px;">
+                <table class="stack-table">
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Technology</th>
+                            <th>Rationale</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>LLM — both agents</td>
+                            <td>Anthropic Claude Haiku</td>
+                            <td>Fast, cost-effective, and deterministic at temperature=0. Signal consistency requires the same input to always produce the same output.</td>
+                        </tr>
+                        <tr>
+                            <td>Web search</td>
+                            <td>Gemini Flash + Google grounding</td>
+                            <td>Batched search — one API call covers all flagged concerns. Date-anchored queries prevent stale cached results.</td>
+                        </tr>
+                        <tr>
+                            <td>Financial data</td>
+                            <td>yfinance</td>
+                            <td>Free, ASX-compatible with .AX suffix tickers. Price data is live (15-20 min delay). Fundamentals reflect most recent filing.</td>
+                        </tr>
+                        <tr>
+                            <td>News</td>
+                            <td>NewsAPI</td>
+                            <td>Free tier sufficient for development and demo use. Known limitation: search relevance is broad. Replacement planned.</td>
+                        </tr>
+                        <tr>
+                            <td>Orchestration</td>
+                            <td>Native Python</td>
+                            <td>CrewAI was evaluated and rejected — it makes 4-6 hidden API calls per execution, consistently hitting rate limits. Native Python gives full control over every API call.</td>
+                        </tr>
+                        <tr>
+                            <td>Backend</td>
+                            <td>FastAPI + Jinja2</td>
+                            <td>Async-native foundation built for parallelisation. Jinja2 templates give full control over HTML output.</td>
+                        </tr>
+                        <tr>
+                            <td>Deployment</td>
+                            <td>Azure App Service B1</td>
+                            <td>Australia East region. GitHub Actions CI/CD — every push to main deploys automatically.</td>
+                        </tr>
+                        <tr>
+                            <td>Language</td>
+                            <td>Python 3.11</td>
+                            <td>Industry standard for AI/LLM tooling. Broad library ecosystem, strong Azure support.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── Section 4: Known limitations ── -->
+        <div class="hiw-section">
+            <div class="hiw-section-label">Known limitations</div>
+            <h2 class="hiw-section-title">What this tool can and can't do</h2>
+            <p class="hiw-section-body">
+                Architectural honesty matters. These are the current constraints — each one
+                has a planned resolution.
+            </p>
+
+            <div class="limit-list">
+                <div class="limit-item">
+                    <div class="limit-dot"></div>
+                    <div><strong style="color: var(--ink); font-weight:500;">Analysis time is 40–55 seconds.</strong> Two sequential Claude calls plus Gemini web search. Milestone 8 introduces async parallelisation and prompt optimisation to reduce this meaningfully.</div>
+                </div>
+                <div class="limit-item">
+                    <div class="limit-dot"></div>
+                    <div><strong style="color: var(--ink); font-weight:500;">Fundamentals data lags by up to 12 months.</strong> yfinance returns the most recent annual or semi-annual filing. The tool discloses this in the disclaimer on every analysis.</div>
+                </div>
+                <div class="limit-item">
+                    <div class="limit-dot"></div>
+                    <div><strong style="color: var(--ink); font-weight:500;">News relevance is broad.</strong> NewsAPI free tier search is not company-specific. A dedicated ASX announcements feed is planned as a replacement.</div>
+                </div>
+                <div class="limit-item">
+                    <div class="limit-dot"></div>
+                    <div><strong style="color: var(--ink); font-weight:500;">Single instance hosting.</strong> Azure B1 runs one server process. Concurrent users queue. Four uvicorn workers partially mitigate this — proper async pipeline is the full fix.</div>
+                </div>
+                <div class="limit-item">
+                    <div class="limit-dot"></div>
+                    <div><strong style="color: var(--ink); font-weight:500;">General financial information only.</strong> This tool does not constitute financial advice. Always verify against ASX announcements and consult a licensed financial adviser before making investment decisions.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Section 5: What's next ── -->
+        <div class="hiw-section">
+            <div class="hiw-section-label">What's next</div>
+            <h2 class="hiw-section-title">The roadmap</h2>
+
+            <div class="next-grid">
+                <div class="next-card">
+                    <div class="next-card-label">Upcoming</div>
+                    <div class="next-card-title">RAG integration</div>
+                    <div class="next-card-body">PDF ingestion of ASX annual reports into ChromaDB. Anomaly deep dives cite actual report sections rather than generic disclaimers.</div>
+                </div>
+                <div class="next-card">
+                    <div class="next-card-label">Planned</div>
+                    <div class="next-card-title">Better data sources</div>
+                    <div class="next-card-body">Replace NewsAPI with a dedicated ASX announcements feed. Alpha Vantage integration to cross-verify balance sheet data.</div>
+                </div>
+                <div class="next-card">
+                    <div class="next-card-label">Future</div>
+                    <div class="next-card-title">ASX200 screener</div>
+                    <div class="next-card-body">Scan the full ASX200 automatically. Surface the top undervalued stocks by configurable criteria.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── CTA ── -->
+        <div class="hiw-cta">
+            <div>
+                <div class="hiw-cta-text">See it in action</div>
+                <div class="hiw-cta-sub">Enter any ASX ticker and get a plain-English verdict in under a minute.</div>
+            </div>
+            <a href="/" class="hiw-cta-btn">Analyse a stock →</a>
+        </div>
+
+    </main>
+
+    <!-- ── Footer ── -->
+    <footer class="site-footer">
+        <span>Built by Shyam · Melbourne 2026</span>
+        <span class="footer-dot">·</span>
+        <a href="https://open.substack.com/pub/itzshyam" target="_blank">Beyond the Config</a>
+        <span class="footer-dot">·</span>
+        <a href="https://github.com/itzshyam/asx-intel-public" target="_blank">GitHub</a>
+    </footer>
+
+</div>
+
+</body>
+</html>

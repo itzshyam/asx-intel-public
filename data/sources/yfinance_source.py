@@ -52,3 +52,40 @@ def fetch_market_change():
         return round(change, 1) if change is not None else None # already a percentage
     except:
         return None
+
+def fetch_price_history(ticker_symbol):
+    """
+    Fetches 3-year weekly price history for trend context.
+    Returns a summary dict with key price points, not raw data.
+    """
+    try:
+        ticker = yf.Ticker(ticker_symbol)
+        hist = ticker.history(period="3y", interval="1mo")
+        if hist.empty:
+            return None
+
+        prices = hist["Close"].dropna().tolist()
+        if len(prices) < 6:
+            return None
+
+        current   = round(prices[-1], 2)
+        one_yr    = round(prices[-12], 2) if len(prices) >= 12 else None
+        two_yr    = round(prices[-24], 2) if len(prices) >= 24 else None
+        three_yr  = round(prices[0], 2)
+
+        def pct_change(old, new):
+            if old and old != 0:
+                return round(((new - old) / old) * 100, 1)
+            return None
+
+        return {
+            "current":          current,
+            "one_year_ago":     one_yr,
+            "two_year_ago":     two_yr,
+            "three_year_ago":   three_yr,
+            "change_1yr_pct":   pct_change(one_yr, current),
+            "change_2yr_pct":   pct_change(two_yr, current),
+            "change_3yr_pct":   pct_change(three_yr, current),
+        }
+    except:
+        return None

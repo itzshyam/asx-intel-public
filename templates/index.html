@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASX Intel — AI-Powered Company Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <div class="page-shell">
+
+        <!-- ── Header bar ───────────────────────────────── -->
+        <header class="site-header">
+            <div class="logo">ASX<span>Intel</span></div>
+            <nav style="display:flex; gap:20px; align-items:center;">
+                <a href="/how-it-works" style="font-size:0.84rem; font-weight:500; color:var(--ink-muted);">How it works</a>
+            </nav>
+        </header>
+
+        <!-- ── Hero ─────────────────────────────────────── -->
+        <main class="hero">
+
+            <div class="hero-eyebrow">Two-agent AI pipeline · Live market data · ASX-listed stocks</div>
+
+            <h1 class="hero-title">
+                Know what you own.<br>
+                <span class="hero-title-muted">Before you own it.</span>
+            </h1>
+
+            <p class="hero-body">
+                Enter any ASX ticker. Two AI agents analyse the financials,
+                stress-test each other's conclusions with live web search,
+                and return a plain-English verdict — in under a minute.
+            </p>
+
+            <!-- ── Search form ───────────────────────────── -->
+            <form class="search-form" action="/analyse" method="POST" id="analyseForm">
+                <div class="search-row">
+                    <div class="search-input-wrap">
+                        <span class="search-prefix">ASX</span>
+                        <input
+                            type="text"
+                            name="ticker"
+                            id="tickerInput"
+                            placeholder="BHP · CBA · WES · NST · CSL"
+                            autocomplete="off"
+                            autocapitalize="characters"
+                            spellcheck="false"
+                            list="tickerList"
+                            required
+                        >
+                        <datalist id="tickerList"></datalist>
+                    </div>
+                    <button type="submit" class="analyse-btn" id="analyseBtn">
+                        <span class="btn-text">Analyse →</span>
+                        <span class="btn-loading" style="display:none;">
+                            <span class="dot-pulse"></span>
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Error message if any -->
+                {% if error %}
+                <div class="form-error">⚠ {{ error }}</div>
+                {% endif %}
+            </form>
+
+            <!-- ── Loading overlay ───────────────────────── -->
+            <div class="loading-overlay" id="loadingOverlay" style="display:none;">
+                <div class="loading-card">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-stage" id="loadingStage">Fetching live ASX data...</div>
+                    <div class="loading-sub">Two AI agents are working. Takes ~45 seconds.</div>
+                    <div class="loading-progress">
+                        <div class="loading-bar" id="loadingBar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Feature pills ─────────────────────────── -->
+            <div class="feature-pills">
+                <div class="pill">🤖 Two-agent pipeline</div>
+                <div class="pill">🔍 Live web search</div>
+                <div class="pill">📊 yfinance data</div>
+                <div class="pill">⚡ Gemini stress-test</div>
+                <div class="pill">🛡 ASIC-conscious</div>
+            </div>
+
+        </main>
+
+        <!-- ── Footer ───────────────────────────────────── -->
+        <footer class="site-footer">
+            <span>Built by Shyam · Melbourne 2026</span>
+            <span class="footer-dot">·</span>
+            <a href="https://open.substack.com/pub/itzshyam" target="_blank">Beyond the Config</a>
+            <span class="footer-dot">·</span>
+            <a href="https://github.com/itzshyam/asx-intel-public" target="_blank">GitHub</a>
+        </footer>
+
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

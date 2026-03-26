@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.name }} — ASX Intel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <div class="page-shell results-shell">
+
+        <!-- ── Header bar ───────────────────────────────── -->
+        <header class="site-header">
+            <a href="/" class="logo">ASX<span>Intel</span></a>
+            <a href="/" class="new-search-btn">← New Search</a>
+        </header>
+
+        <main class="results-main">
+
+            <!-- ── Company identity ─────────────────────── -->
+            <div class="company-header">
+                <div class="company-name">{{ data.name }}</div>
+                <div class="company-meta">
+                    {{ data.sector }} &nbsp;·&nbsp; {{ data.industry }} &nbsp;·&nbsp; {{ data.country }}
+                </div>
+            </div>
+
+            <!-- ── Live metric strip ─────────────────────── -->
+            <div class="metric-strip">
+                <div class="metric-card">
+                    <div class="metric-label">Current Price</div>
+                    <div class="metric-value">{{ data.current_price }}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">{{ data.market_cap }}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Analyst Rating</div>
+                    <div class="metric-value">
+                        {% if data.analyst_rating in ['BUY', 'STRONG_BUY'] %}🟢
+                        {% elif data.analyst_rating in ['SELL', 'STRONG_SELL'] %}🔴
+                        {% else %}🟡{% endif %}
+                        {{ data.analyst_rating }}
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">{{ data.pe_ratio }}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Revenue</div>
+                    <div class="metric-value">{{ data.revenue }}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Net Income</div>
+                    <div class="metric-value">{{ data.net_income }}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Dividend Yield</div>
+                    <div class="metric-value">{{ data.dividend_yield }}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value">{{ data.return_on_equity }}</div>
+                </div>
+            </div>
+
+            <!-- ── 52-week bar ───────────────────────────── -->
+            <div class="week-bar-wrap">
+                <div class="week-bar-label">
+                    52-WEEK RANGE &nbsp; {{ data['52w_low'] }} — {{ data['52w_high'] }}
+                </div>
+                <div class="week-bar-track">
+                    <div class="week-bar-fill" style="width: {{ data.current_vs_52w.split('%')[0] if '%' in data.current_vs_52w else '50' }}%"></div>
+                </div>
+                <div class="week-bar-ends">
+                    <span>Low</span>
+                    <span class="week-bar-pct">{{ data.current_vs_52w }}</span>
+                    <span>High</span>
+                </div>
+            </div>
+
+            <!-- ── Four signal cards ─────────────────────── -->
+            <div class="signal-grid">
+
+                <div class="signal-card signal-{{ health_signal }}">
+                    <div class="signal-title">Business Health</div>
+                    <div class="signal-icon">
+                        {% if health_signal == 'green' %}🟢{% elif health_signal == 'red' %}🔴{% else %}🟡{% endif %}
+                    </div>
+                    <div class="signal-verdict">{{ health_verdict }}</div>
+                    <div class="signal-supporting">{{ data.profit_margin }}</div>
+                </div>
+
+                <div class="signal-card signal-{{ pe_signal }}">
+                    <div class="signal-title">Valuation</div>
+                    <div class="signal-icon">
+                        {% if pe_signal == 'green' %}🟢{% elif pe_signal == 'red' %}🔴{% else %}🟡{% endif %}
+                    </div>
+                    <div class="signal-verdict">{{ pe_label }}</div>
+                    <div class="signal-supporting">{{ data.pe_ratio }}</div>
+                </div>
+
+                <div class="signal-card signal-{{ analyst_signal }}">
+                    <div class="signal-title">Analysts</div>
+                    <div class="signal-icon">
+                        {% if analyst_signal == 'green' %}🟢{% elif analyst_signal == 'red' %}🔴{% else %}🟡{% endif %}
+                    </div>
+                    <div class="signal-verdict">{{ data.analyst_rating }}</div>
+                    <div class="signal-supporting">{{ upside }}</div>
+                </div>
+
+                <div class="signal-card signal-{{ div_signal }}">
+                    <div class="signal-title">Dividend</div>
+                    <div class="signal-icon">
+                        {% if div_signal == 'green' %}🟢{% elif div_signal == 'red' %}🔴{% else %}🟡{% endif %}
+                    </div>
+                    <div class="signal-verdict">{{ div_label }}</div>
+                    <div class="signal-supporting">{{ div_yield }}</div>
+                </div>
+
+            </div>
+
+            <!-- ── Verdict ───────────────────────────────── -->
+            <div class="verdict-block">
+                <div class="verdict-eyebrow">Verdict</div>
+                <div class="verdict-text">{{ analysis.verdict }}</div>
+            </div>
+
+            <!-- ── What they do ──────────────────────────── -->
+            <div class="section-block">
+                <div class="section-label">What This Company Does</div>
+                <div class="prose-text">{{ analysis.what_they_do }}</div>
+            </div>
+
+            <!-- ── Business quality ──────────────────────── -->
+            <div class="section-block">
+                <div class="section-label">Business Quality</div>
+                <div class="card-stack">
+
+                    {% for label, key in [
+                        ('Profitability', 'profitability'),
+                        ('Capital Efficiency (ROE)', 'roe'),
+                        ('Earnings Quality', 'earnings_quality'),
+                        ('Debt', 'debt')
+                    ] %}
+                    {% set metric = bq.get(key, {}) %}
+                    {% set sig = metric.get('signal', 'yellow') %}
+                    <div class="analysis-card ac-{{ sig }}">
+                        <div class="ac-signal">
+                            {% if sig == 'green' %}🟢{% elif sig == 'red' %}🔴{% else %}🟡{% endif %}
+                        </div>
+                        <div class="ac-body">
+                            <div class="ac-label">{{ label }}</div>
+                            <div class="ac-text">{{ metric.get('text', '') }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <!-- Strength / Concern highlights -->
+                    {% if bq.get('strength') %}
+                    <div class="highlight-card hc-strength">
+                        <span class="hc-tag">Standout Strength</span>
+                        {{ bq.strength }}
+                    </div>
+                    {% endif %}
+                    {% if bq.get('concern') %}
+                    <div class="highlight-card hc-concern">
+                        <span class="hc-tag">Standout Concern</span>
+                        {{ bq.concern }}
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <!-- ── Valuation ─────────────────────────────── -->
+            <div class="section-block">
+                <div class="section-label">Valuation</div>
+                <div class="card-stack">
+
+                    {% for label, key in [
+                        ('P/E Assessment', 'pe_assessment'),
+                        ('Price Position', 'price_position'),
+                        ('Analyst View', 'analyst_view')
+                    ] %}
+                    {% set metric = val.get(key, {}) %}
+                    {% set sig = metric.get('signal', 'yellow') %}
+                    <div class="analysis-card ac-{{ sig }}">
+                        <div class="ac-signal">
+                            {% if sig == 'green' %}🟢{% elif sig == 'red' %}🔴{% else %}🟡{% endif %}
+                        </div>
+                        <div class="ac-body">
+                            <div class="ac-label">{{ label }}</div>
+                            <div class="ac-text">{{ metric.get('text', '') }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+
+            <!-- ── Dividend (conditional) ────────────────── -->
+            {% if div.get('has_dividend') %}
+            <div class="section-block">
+                <div class="section-label">Dividend</div>
+                <div class="card-stack">
+                    {% set sig = div.get('signal', 'yellow') %}
+                    <div class="analysis-card ac-{{ sig }}">
+                        <div class="ac-signal">
+                            {% if sig == 'green' %}🟢{% elif sig == 'red' %}🔴{% else %}🟡{% endif %}
+                        </div>
+                        <div class="ac-body">
+                            <div class="ac-label">Dividend</div>
+                            <div class="ac-text">{{ div.get('text', '') }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- ── Investor fit ───────────────────────────── -->
+            <div class="section-block">
+                <div class="section-label">Investor Fit</div>
+                <div class="fit-grid">
+                    <div class="fit-panel fit-suits">
+                        <div class="fit-panel-header">✅ Suits</div>
+                        {% for item in fit.get('suits', []) %}
+                        <div class="fit-item">{{ item }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="fit-panel fit-not">
+                        <div class="fit-panel-header">❌ Doesn't Suit</div>
+                        {% for item in fit.get('doesnt_suit', []) %}
+                        <div class="fit-item">{{ item }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Risks ─────────────────────────────────── -->
+            <div class="section-block">
+                <div class="section-label">Top Risks</div>
+                <div class="risk-list">
+                    {% for risk in fit.get('risks', []) %}
+                    <div class="risk-item">
+                        <span class="risk-num">{{ loop.index }}</span>
+                        {{ risk }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- ── Disclaimer ────────────────────────────── -->
+            <div class="disclaimer-block">
+                ⚠ {{ analysis.disclaimer }}
+            </div>
+
+            <!-- ── Anomaly deep dives ─────────────────────── -->
+            {% if anomalies %}
+            <div class="section-block">
+                <div class="section-label">Anomaly Deep Dives</div>
+                <div class="anomaly-note">These metrics were flagged as unusual. Expand each one to understand what it means.</div>
+                {% for anomaly in anomalies %}
+                <details class="anomaly-card">
+                    <summary class="anomaly-summary">
+                        ⚠ {{ anomaly.metric }} — {{ anomaly.value }}
+                    </summary>
+                    <div class="anomaly-body" data-metric="{{ anomaly.metric }}" data-value="{{ anomaly.value }}" data-sector="{{ anomaly.sector }}" data-industry="{{ anomaly.industry }}" data-threshold="{{ anomaly.threshold }}">
+                        <div class="anomaly-loading">Researching this anomaly...</div>
+                    </div>
+                </details>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+        </main>
+
+        <!-- ── Footer ───────────────────────────────────── -->
+        <footer class="site-footer">
+            <span>Built by Shyam · Melbourne 2026</span>
+            <span class="footer-dot">·</span>
+            <a href="https://open.substack.com/pub/itzshyam" target="_blank">Beyond the Config</a>
+            <span class="footer-dot">·</span>
+            <a href="https://github.com/itzshyam/asx-intel-public" target="_blank">GitHub</a>
+        </footer>
+
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

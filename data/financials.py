@@ -1,5 +1,4 @@
-from data.sources.yfinance_source import fetch_company_info
-from data.sources.yfinance_source import fetch_company_info, fetch_sector_change, fetch_market_change
+from data.sources.yfinance_source import fetch_company_info, fetch_sector_change, fetch_market_change, fetch_price_history
 
 def format_number(value):
     if value == "N/A" or value is None:
@@ -246,5 +245,8 @@ def get_company_data(ticker_symbol):
     data["anomalies"] = detect_anomalies(info, data)
 
     data["price_momentum"] = _price_momentum(info, data["sector"])
+
+    # --- 3 year price history ---
+    data["price_history"]  = fetch_price_history(ticker_symbol)
     
     return data
